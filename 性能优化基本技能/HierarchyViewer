@@ -1,0 +1,11 @@
+HierarchyViewer能够可视化的角度直观地获得UI布局设计结构和各种属性的信息，帮助我们优化布局设计。HierarchyViewer是我们优化程序的工具之一，它是Android自带的非常有用的工具，可以帮助我们更好地检视和设计用户界面(UI)，绝对是UI检视的利器。
+
+Hierarchy Viewer是随Android SDK发布的工具，位于Android SDK/tools/hierarchyviewer.bat 
+
+观察层次结构图，这个图有点大，可以拖动。View Hierarchy窗口显示了Activity的所有View对象，选中某个View还可以查看View的具体信息，最好选择工具中的Show Extras选项。
+
+观察单个view，选择单个view后会出现如下图所示图形。这里会看到Measure、Layout、Draw的耗时。
+
+View Hierarcy 同时能帮助你识别渲染性能比较低的部分。View节点中带有红色或黄色的点代表速度较慢的View对象。如单步运行应用程序那样，你可以这样来判断某个View 速度一直很慢，还是只在某个特定环境下速度才慢。
+请注意，低性能并不表示一定有问题，特别像是ViewGroup对象，View的子节点越多，结构越复杂，性能越差。
+View Hierarchy 窗口还可以帮助你找到性能问题。只要看每个View节点的性能指标（颜色点）就可以，你可以看到测量（布局或绘制）最慢的View对象是哪个，这样你就能快速确定，要优先察看哪个问题。

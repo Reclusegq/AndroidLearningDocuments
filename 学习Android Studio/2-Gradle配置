@@ -1,0 +1,237 @@
+#Gradle 简介
+Gradle 是一个自动化构建工具。它使用一种基于Groovy的特定领域语言(DSL)来声明项目设置，完全兼容JAVA。
+
+##1. 基础知识
+projects 和 tasks是Gradle中最重要的两个概念，任何一个Gradle构建都是由一个或者多个project组成，每个project可以是一个jar包，一个web应用，或者一个android app等，每个project又由多个task构成，一个task其实就是构建过程中一个原子性的操作，比如编译、拷贝等。
+###build.gradle 配置文件， 负责当前project的构建定义。
+task依赖：
+```Groovy
+	task taskX(dependsOn: 'taskY') << {
+	    println 'taskX'
+	}
+	task taskY << {
+	    println 'taskY'
+	}
+```
+默认task
+```Groovy
+	defaultTasks 'clean', 'run'
+
+
+	task clean << {
+	    println 'Default Cleaning!'
+	}
+
+	task run << {
+	    println 'Default Running!'
+	}
+
+	task other << {
+	    println "I'm not a default task!"
+	}
+```
+
+##2. Android Studio中Gradle基本配置
+
+###(1) 工程的配置：
+build.gradle是一个顶级的build配置文件，在这里可以为该project一些常用的配置。
+```
+	// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+	buildscript {
+	    repositories {           //构建过程依赖的仓库          gradle脚本自身需要的资源
+	        jcenter()
+	    }
+	    dependencies {        //构建过程需要依赖的库
+	        classpath 'com.android.tools.build:gradle:2.1.2'          gradle插件的版本
+
+	        // NOTE: Do not place your application dependencies here; they belong
+	        // in the individual module build.gradle files
+	    }
+	}
+
+	allprojects {            //这里面配置整个项目依赖的仓库,这样每个module就不用配置仓库了           
+	    repositories {        // 构建过程依赖的仓库 项目所有模块需要的资源
+	        jcenter()
+	    }
+	}
+
+	task clean(type: Delete) {
+	    delete rootProject.buildDir
+	}
+```
+
+settings.gradle用于配置project，标明其下有几个module，比如:app module
+```
+	include ':app'
+```
+###(2)module的配置
+基本配置 build.gradle:
+```
+	apply plugin: 'com.android.application'                        // 表示该module是一个app module，应用了com.android.application插件；其他还有android library，那么这里的是apply plugin: ‘com.android.library’.
+
+	android {
+	    compileSdkVersion 24                               //SDK编译版本
+	    buildToolsVersion "24.0.0"                         //构建工具版本
+
+	    defaultConfig {                                           //默认配置
+	        applicationId "com.example.recluseguo.myapplication"           //配置包名
+	        minSdkVersion 15
+	        targetSdkVersion 24
+	        versionCode 1                               //版本号
+	        versionName "1.0"                        //版本名称
+	    }
+	    buildTypes {                                      //构建类型，分为release 和 debug两种
+	        release {
+	            minifyEnabled false                 //是否开启混淆
+	            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'            //混淆文件位置
+	        }
+	    }
+	}
+
+	dependencies {                                       //定义该module需要依赖的jar，aar，jcenter库信息。
+	    compile fileTree(dir: 'libs', include: ['*.jar'])            //依赖libs目录下所有jar包
+	    testCompile 'junit:junit:4.12'                                 
+	    compile 'com.android.support:appcompat-v7:24.0.0'          //依赖appcompat库
+	}
+```
+###(3) gradle 相关的文件
+	gradle.properties：
+	从名字上就知道它是一个配置文件，没错，这里面可以定义一些常量供build.gradle使用，比如可以配置签名相关信息如keystore位置，密码，keyalias等。
+	settings.gradle：
+	这个文件是用来配置多模块的，比如你的项目有两个模块module-a,module-b,那么你就需要在这个文件中进行配置，格式如下：
+	include ':module-a',':module-b'
+	gradle文件夹：
+	这里面有两个文件，gradle-wrapper.jar和gradle-wrapper.properties,它们就是gradle wrapper。gradle项目都会有，你可以通过命令gradle init来创建它们（前提是本地安装了gradle并且配置到了环境变量中）。
+	gradlew和gradlew.bat:
+	这分别是linux下的shell脚本和windows下的批处理文件，它们的作用是根据gradle-wrapper.properties文件中的distributionUrl下载对应的gradle版本。这样就可以保证在不同的环境下构建时都是使用的统一版本的gradle，即使该环境没有安装gradle也可以，因为gradle wrapper会自动下载对应的gradle版本。
+	gradlew的用法跟gradle一模一样，比如执行构建gradle build命令，你可以用gradlew build。gradlew即gradle wrapper的缩写。
+###(4) gradle仓库：
+gradle有三种仓库，maven仓库，ivy仓库以及flat本地仓库。声明方式如下：
+```
+	maven{
+	      url "..."
+	}
+	ivy{
+	      url "..."
+	}
+	flatDir{
+	      dirs 'xxx'
+	}
+```
+有一些仓库提供了别名，可直接使用：
+```
+	repositories{
+	     mavenCentral()
+	     jcenter()
+	     mavenLocal()
+	}
+```
+###(5) gradle任务：
+gradle中有一个核心概念叫任务，跟maven中的插件目标类似。
+gradle的android插件提供了四个顶级任务
+	- assemble 构建项目输出
+	- check 运行检测和测试任务
+	- build 运行assemble和check
+	- clean 清理输出任务
+执行任务可以通过gradle/gradlew+任务名称的方式执行，执行一个顶级任务会同时执行与其依赖的任务，比如你执行
+	gradlew assemble
+	它通常会执行:
+	gradlew assembleDebug
+	gradlew assembleRelease
+这时会在你项目的build/outputs/apk或者build/outputs/aar目录生成输出文件
+可以通过：
+	gradlew tasks
+列出所有可用的任务。在Android Studio中可以打开右侧gradle视图查看所有任务。
+
+
+(6) 常见问题
+- 配置应用的签名信息
+```
+	android {
+
+	    signingConfigs {
+	        release {
+	            storeFile file("release.keystore")                       签名证书文件
+	            keyAlias "release"                                             别名
+	            keyPassword "123456"                                     key的密码
+	            storePassword "123456"                                  证书的密码
+	        }
+	        debug {
+	            ...
+	        }
+	    }
+
+	    buildTypes {
+	        release {
+	            signingConfig signingConfigs.release
+	        }
+	        debug {
+	            signingConfig signingConfigs.debug
+	        }
+	    }
+	  }
+```
+
+- 使用第三方库
+	1. 依赖jar包，将下载好的jar包放入libs目录，并配置build.gradle文件
+		compile files('libs/xxx.jar') 或依赖所有jar包 compile fileTree(dir: 'libs', include: ['*.jar'])
+		对于jcenter中包含的jar包无需下载，jcenter在project的build.gradle中的allproject节点中已经声明
+	2. 导入maven仓库
+		可以直接声明依赖
+		```
+		compile 'groupId:artifactId:version'
+		```
+		对于第三方的maven仓库需要在repositories声明
+		```
+		repositories{
+		     maven{
+		          url="http://mvnrepo.xxx.com"
+		     }
+		}
+		```
+	3. 依赖某个project
+		首先被依赖的project必须为library的模块，即build.gradle中申明的插件为 apply plugin: 'com.android.library'， 假设此模块为 module-b， 而module-a依赖它，则module-a的build.gradle中的dependencies节点中需要配置compile project(':module-b')，而且project中的setting.gradle需要配置 include ': module-a', ': module-b'
+	4. 依赖arr文件
+		使用本地arr文件
+		首先申明flat仓库
+		```
+			repositories{
+			    flatDir{
+			          dirs 'libs'
+			    }
+			}
+		```
+		其次声明依赖
+		```
+			dependencies{
+      				compile (name:'xxx',ext:'aar')
+      				}
+      		```
+      		而使用第三方arr文件，只需要直接声明依赖
+      		```
+      			compile 'com.aaa.xxx:core:1.0.1@aar'
+      		```
+      	5. 排除依赖（出现依赖冲突时）
+      		```
+      		compile (group:'xxx',name:'xxx',version:'xxx'){
+      			exclude group:'xxx',module:'xxx'       //module对应的就是artifactId
+      			}
+      		```
+
+- APK 瘦身
+在Android Studio中我们可以开启混淆，和自动删除没有Resources文件，来达到给APP瘦身的目的，里面有很多无效的Resource, 删除后生成的APK会小很多
+我们只需要在项目的build.gradle中加入
+```
+	android {
+	    buildTypes {
+	        release {
+	            minifyEnabled true
+	            shrinkResources true
+	        }
+	    }
+	}
+```
+minifyEnabled 是开启混淆
+shrinkResources 删除无效的Resource
+shrinkResources依赖于minifyEnabled，必须和minifyEnabled一起用。

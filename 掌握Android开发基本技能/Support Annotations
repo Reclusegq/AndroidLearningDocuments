@@ -1,0 +1,48 @@
+# Support Annoations
+
+android-support-annotations是Android官方提供的一个注解库，它提供了许多有用的注解，这些注解的生命周期为源码时期，也就是在编译之后则不再保留，通常用于辅助代码上的静态检查。
+
+依赖问题
+
+```
+	compile 'com.android.support:support-annotations:23.1.1'
+```
+
+### 资源类注解：
+AnimatorRes ：指出一个integer的参数，成员变量，或方法返回值是一个animator资源的引用。
+AnimRes：指出一个integer的参数，成员变量，或方法返回值是一个anim资源的引用。
+AnyRes：指出一个integer的参数，成员变量，或方法返回值是一个任意资源类型的引用。
+ArrayRes：指出一个integer的参数，成员变量，或方法返回值是一个array资源类型的引用。
+AttrRes：指出一个integer的参数，成员变量，或方法返回值是一个attr资源的引用。
+BoolRes：指出一个integer的参数，成员变量，或方法返回值是一个boolean资源的引用。
+ColorRes：指出一个integer的参数，成员变量，或方法返回值是一个color资源的引用。
+DimenRes：指出一个integer的参数，成员变量，或方法返回值是一个dimen资源的引用。
+DrawableRes：指出一个integer的参数，成员变量，或方法返回值是一个drawable资源的引用（包括@mipmap）。
+FractionRes：指出一个integer的参数，成员变量，或方法返回值是一个fraction资源的引用。
+IdRes：指出一个integer的参数，成员变量，或方法返回值是一个id资源的引用。
+IntegerRes：指出一个integer的参数，成员变量，或方法返回值是一个integer资源的引用。
+InterpolatorRes：指出一个integer的参数，成员变量，或方法返回值是一个interpolator资源的引用。
+LayoutRes：指出一个integer的参数，成员变量，或方法返回值是一个layout资源的引用。
+MenuRes：指出一个integer的参数，成员变量，或方法返回值是一个menu资源的引用。
+PluralsRes：指出一个integer的参数，成员变量，或方法返回值是一个plurals资源的引用。
+RawRes：指出一个integer的参数，成员变量，或方法返回值是一个raw资源的引用。
+StringRes：指出一个integer的参数，成员变量，或方法返回值是一个string资源的引用。
+StyleableRes：指出一个integer的参数，成员变量，或方法返回值是一个styleable资源的引用。
+StyleRes：指出一个integer的参数，成员变量，或方法返回值是一个style资源的引用。
+TransitionRes：指出一个integer的参数，成员变量，或方法返回值是一个transition资源的引用。
+XmlRes：指出一个integer的参数，成员变量，或方法返回值是一个xml资源的引用。
+
+### 颜色注解：
+ColorInt：指出一个被注解的元素，是一个int颜色值，表示的是AARRGGBB
+
+
+线程相关的注解：
+
+BinderThread：指出被注解的方法应该只在binder线程中被调用。
+MainThread：指出被注解的方法应该只在主线程中被调用。
+WorkerThread：指出被注解的方法应该只在工作线程中被调用。
+UiThread：指出被注解的方法应该只在UI线程中被调用。
+
+空指针检查
+- NonNull：指出一个参数，变量，或方法返回值永远不可为null。 
+- Nullable：指出一个参数，变量，或方法返回值可能为null。

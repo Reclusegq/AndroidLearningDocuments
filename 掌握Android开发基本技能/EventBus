@@ -1,0 +1,60 @@
+# EventBus 简介
+
+EventBus是一个Android端优化的publish/subscribe消息总线，简化了应用程序内各组件间、组件与后台线程间的通信。比如请求网络，等网络返回时通过Handler或Broadcast通知UI，两个Fragment之间需要通过Listener通信，这些需求都可以通过EventBus实现。
+
+## 1. 基本用法
+
+### 添加依赖库
+
+```
+	compile 'de.greenrobot:eventbus:3.0.0-beta1'
+```
+
+### 注册
+
+EventBus负责在不同组件之间传递消息，因此需要在组件中注册和取消注册
+
+```
+	EventBus.getDefault().register(this);   //通常在onCreate()方法中
+
+	EventBus.getDefault().unregister(this); //通常在onDestroy() 方法中。
+```
+
+### 发布者
+
+在任何线程中均可以发布消息，消息为任意的Object对象，通常建议自定义Event对象作为消息传递
+
+```
+	EvenBus.getDefault().post(event);
+```
+
+### 订阅者
+
+在3.0中可以直接使用注解的方法，@Subscribe(threadMode = ....)
+
+```
+	@Subscribe(threadMode = ThreadMode.MainThread)
+	    public void onMainActivity(int string){
+	        Log.i("recluse", "run in the thread " + Thread.currentThread().getName() + " , " +  Thread.currentThread().getId());
+	        Log.i("recluse", string + "");
+	    }
+```
+订阅者定义的方法所接收的参数需要跟发布者post方法中所传递的参数类型一致。
+
+其中ThreadMode提供了四个常量：
+
+- MainThread 主线程
+- BackgroundThread 后台线程
+- Async 后台线程
+- PostThread 发送线程（默认）
+
+MainThread：该模式下，无论事件由哪个线程发出，该方法均在UI线程上被调用，因此该方法中不可以处理耗时逻辑。
+BackgroundThread:当事件是在UI线程发出，那么事件处理实际上是需要新建单独线程，如果是在后台线程发出，那么事件处理就在该线程。该事件处理方法应该是快速的，避免阻塞后台线程。
+Async：发送事件方不需要等待事件处理完毕。这种方式适用于该事件处理方法需要较长时间，例如网络请求。即不管是UI线程还是工作线程发出的消息，该方法都会在单独线程中调用，都是异步调用，不会发生阻塞。
+
+### 黏性事件
+
+黏性事件，简单讲，就是在发送事件之后再订阅该事件也能收到该事件，跟黏性广播类似。
+基本使用方法类似，也是需要首先注册，并且调用registerStikey(context)方法，然后在发布消息时调用postSticky(event)，在订阅者的方法注解中标明@Subscribe(sticky = true) 默认是false
+
+粘性事件，能够收到订阅之前发送的消息。但是它只能收到最新的一次消息，比如说在未订阅之前已经发送了多条黏性消息了，然后再订阅只能收到最近的一条消息。

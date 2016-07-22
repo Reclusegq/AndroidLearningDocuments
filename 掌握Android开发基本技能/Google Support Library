@@ -1,0 +1,40 @@
+# Google Support Library
+
+> The Android Support Library offers a number of features that are not built into the framework. These libraries offer backward-compatible versions of new features, provide useful UI elements that are not included in the framework, and provide a range of utilities that apps can draw on.
+
+Google Support Library 主要起到一下几方面的作用
+
+## 1. Backward Compatibility
+> Support libraries allow apps running on older versions of the Android platform to support features made available on newer versions of the platform.
+即为较低的Android版本提供新的特性
+> In other cases, the support library class provides a complete, standalone version of a framework class that does not rely on the availability of any framework APIs. 
+即为不同版本提供一致的功能
+总之，Support Library 用于解决不同版本的兼容问题，提供一致的功能。
+
+## 2. Support for General Layout Patterns
+> Support libraries provide user interface elements not offered by the Android framework.
+为开发者提供用户界面特性，而这类界面特性没有包括在Android Framework 当中，如RecyclerView可以实现列表控件等。
+
+## 3. Support for Different Form Factors
+ > The Android SDK provides libraries for a number of different form factors, such as TV and wearables. An app can depend on the appropriate support library to provide functionality across a wide range of platform versions, and can provide content on external screens, speakers, and other destination devices.
+为兼容不同的平台特性。
+
+总之， Support Library 是为了解决兼容问题，在不同平台下提供一致功能。
+> The Android Support Library provides backward-compatible utility functions. Apps can use these utility functions to provide an appropriate user experience across a wide range of Android system versions.
+
+## Support Library 使用方法
+
+# MaterialDesign support
+材料设计是专为设计适用于多个平台和设备的视觉、运动与互动效果而制定的综合指南。
+Android 为您提供了以下元素来构建材料设计应用：
+- 全新的风格主题
+- 用于设计复杂视图的全新小工具
+- 用于自定义阴影和动画的全新 API
+
+## 使用Material主题
+
+- 系统Widgets可设置它们的调色板
+- 系统Widgets的触摸反馈动画
+- Activity的过渡动画
+
+

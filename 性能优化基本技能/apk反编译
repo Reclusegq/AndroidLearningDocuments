@@ -1,0 +1,51 @@
+# 使用apkTool+dex2jar+jd-GUI
+
+## 1. XML 资源反编译
+
+使用apkTool
+
+```
+	apktool.bat d xxx.apk
+```
+## 2. Java代码反编译
+
+### 1. 将apk文件修改扩展名为zip或rar， 然后对其解压缩
+
+### 2. 对其中的classes.dex文件执行以下命令：
+
+```
+	dex2jar.bat classes.dex
+```
+生成classes-dex2jar.jar文件
+### 3. 使用JD-GUI工具打开jar文件获取源码
+
+
+# 使用JADX
+
+使用..\jadx\build\jadx\bin\下的jadx.bat或者jadx-gui.bat
+
+```
+	jadx[-gui] [options] <input file> (.dex, .apk, .jar or .class)
+	options:
+	 -d, --output-dir           - output directory
+	 -j, --threads-count        - processing threads count
+	 -r, --no-res               - do not decode resources
+	 -s, --no-src               - do not decompile source code
+	 -e, --export-gradle        - save as android gradle project
+	     --show-bad-code        - show inconsistent code (incorrectly decompiled)
+	     --no-replace-consts    - don't replace constant value with matching constant field
+	     --escape-unicode       - escape non latin characters in strings (with \u)
+	     --deobf                - activate deobfuscation
+	     --deobf-min            - min length of name
+	     --deobf-max            - max length of name
+	     --deobf-rewrite-cfg    - force to save deobfuscation map
+	     --deobf-use-sourcename - use source file name as class name alias
+	     --cfg                  - save methods control flow graph to dot file
+	     --raw-cfg              - save methods control flow graph (use raw instructions)
+	 -f, --fallback             - make simple dump (using goto instead of 'if', 'for', etc)
+	 -v, --verbose              - verbose output
+	 -h, --help                 - print this help
+	Example:
+	 jadx -d out classes.dex
+
+```

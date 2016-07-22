@@ -1,0 +1,52 @@
+# Glide 简介
+
+## 1. 基本使用方法
+
+添加依赖
+
+```
+	compile 'com.github.bumptech.glide:glide:3.6.1'	
+```
+
+1. 加载图片
+
+```
+	ImageView targetImageView = (ImageView) findViewById(R.id.imageView);
+	String internetUrl = "http://i.imgur.com/DvpvklR.png";
+
+	Glide
+	    .with(context)
+	    .load(internetUrl)			//load()函数有多重重载形式，可以接收URL，资源id， 文件对象以及Uri等多种参数，加载各类存储形式的图像
+	    .into(targetImageView);  
+```
+2. 参数说明
+
+```
+	Glide.with(context)
+		.load(url)
+		.placeholder(image) 		//占位符，加载成功之前显示的图片
+		.error(image) 		//加载错误后显示的图片
+		.crossFade(int) 	//淡出动画，让图像出现更加平滑，动画默认时间是300ms， 参数为动画持续时间，单位ms
+		// .dontAnimation() 	//默认为300ms的淡出动画，调用该方法可以不使用动画
+		.override(width, height)	//调整图片大小，覆盖imageView中设置的大小（若设置了大小，而非wrap_content）
+		.fitCenter()	//图像缩放，宽或高（较大的）填充imageView，比例不合适可能不能完全填充ImageView， 但是完全展示图像
+		//.centerCrop()	//图像剪裁，宽或高（较小的）填充imageView，其余部分裁掉，完全填充imageView，比例不合适无法完全展示图像
+		.skipMemoryCache( true )	//不使用内存缓存，默认为false
+		.diskCacheStrategy( DiskCacheStrategy.NONE ) 	//不使用磁盘缓存，其他选项见代码之后
+		.priority(Priority.LOW)	//设置请求优先级，其他优先级包括IMMEDIATE， HIGH，NORMAL， 不保证请求顺序，只是作为参考
+		.into(imageView)	//设置加载图像到某个控件，该方法参数也可以是target对象，用作回调处理
+
+```
+不使用磁盘缓存的选项：
+
+- DiskCacheStrategy.NONE 什么都不缓存，就像刚讨论的那样
+- DiskCacheStrategy.SOURCE 仅仅只缓存原来的全分辨率的图像。在我们上面的例子中，将会只有一个 1000x1000 像素的图片
+- DiskCacheStrategy.RESULT 仅仅缓存最终的图像，即，降低分辨率后的（或者是转换后的）
+- DiskCacheStrategy.ALL 缓存所有版本的图像（默认行为）
+
+
+3. 回调
+
+(1) 简单的SimpleTarge<T>
+通过定义SimpleTarge，并实现onResourceReady(T source, GlideAnimation<? super T> animation)方法，处理回调逻辑。定义SimpleTarge的构造函数还可以通过参数指定图像的大小
+(2) ViewTarge<T> 可以实现对自定义的View加载图像

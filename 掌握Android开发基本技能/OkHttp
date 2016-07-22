@@ -1,0 +1,30 @@
+OkHttp简介
+
+## 1. 使用简介
+OKHttp是一款高效的HTTP客户端，支持连接同一地址的链接共享同一个socket，通过连接池来减小响应延迟，还有透明的GZIP压缩，请求缓存等优势OKHttp是一款高效的HTTP客户端，支持连接同一地址的链接共享同一个socket，通过连接池来减小响应延迟，还有透明的GZIP压缩，请求缓存等优势。
+
+gradle配置：
+```
+	compile 'com.squareup.okhttp:okhttp:2.4.0'
+```
+
+### 基本使用方法
+OKHttp的简单实用主要使用三个类。OKHttpClient负责所有的网络请求管理工作，每次网络请求都需要首先构建Request对象，然后传递至OkHttpClient的newCall()方法生成一个Call对象，通过Call对象的execute()或者enqueue()方法，执行同步或异步的网络请求。同步请求使用Call对象的execute()方法，该方法必须在工作线程中调用，方法返回Response对象，该对象中包含返回内容。而异步请求需要给enqueue()方法传递一个Callback接口实例，在回调方法中执行响应逻辑。
+此外，POST请求方式，在请求对象中需要添加header，可以通过Request对象的addHeader()或者header()方法添加，也可以使用FormEncodingBuilder()构建RequestBody对象提交表单数据，或者通过RequestBody.create(name，body)方法生成请求体，body可以是文件等对象，然后传递到Request的post()方法也可以。
+### 请求缓存
+在得到Response对象以后，可以通过cacheResponse()方法获取通过缓存得到的内容，通过networkResponse()方法获取新获取的内容。还可以通过Request.Builder的cacheControl()方法强制使用缓存。
+### 取消操作
+使用Request.Builder的tag方法可以为请求设置Tag, 通过此Tag可以调用OKHttpClient.cancel(Tag)方法取消一次Call，或者直接调用call对象的cancel方法。
+
+### 提取响应头
+对于Response对象，直接通过body的string()获取响应的string形式内容，如果响应提太大会占用较大内存。因此可以使用提取响应头的方法获取内容。在写请求头的时候，可以调用Request.Builder的header(name, value) 添加或修改某个请求头也可以通过addHeader(name, value)方法添加多个请求头。而在响应中可以使用Response的headers()方法返回Headers对象，进而通过name(i) 和 value(i) 获取相应内容，也可以通过header(name)或headers(name)获取特定键值的响应内容。
+
+### Post方式分块提交请求
+Post的请求体不仅可以通过FormEncodingBuilder构建提交表单数据，也可以通过MultiPartBuiler构建，并且后者构建器可以分块添加请求，即通过其addPart(header, body)方法，添加分块请求，最后构建一个可以用于Request.post()方法中使用的RequestBody对象。
+header 
+
+### 文件的上传与下载
+
+
+
+# Okio

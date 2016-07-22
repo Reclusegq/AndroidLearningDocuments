@@ -1,0 +1,56 @@
+# Volley 简介
+
+设计目标就是非常适合去进行数据量不大，但通信频繁的网络操作， 而对于大数据量的网络操作，比如说下载文件等，Volley的表现就会非常糟糕。
+## 1. 基本使用方法：
+	1. 创建一个RequestQueue对象。
+	2. 创建一个StringRequest对象。
+	3. 将StringRequest对象添加到RequestQueue里面。
+```
+	RequestQueue queue = Volley.newRequestQueue(context);  
+
+	StringRequest stringResquest = new StringRequest(Method.GET, String url, Response.Listener<T> listener, Response.ErrorListener<T> listener1)
+
+	queue.add(stringResquest);
+```
+对于使用POST方式请求添加参数可以通过覆写Request的getParam()方法返回关于参数的Map对象。
+
+除StringRequest对象以外还有JsonRequest，包括JsonObjectRequest和JsonArrayRequest两个实现类。
+
+## 2. Volley加载图片
+
+### 1. 方式1. 使用ImageRequest
+由于ImageRequest也是继承自Request，因此使用方法与之前的介绍类似，只不过ImageRequest的构造方法中，多了几个参数，分别用于指定允许图片最大的宽度和高度，如果指定的网络图片的宽度或高度大于这里的最大值，则会对图片进行压缩，指定成0的话就表示不管图片有多大，都不会进行压缩。此外还有一个参数指定颜色属性，有若干常量可供选择。
+
+### 2. 方式2. 使用ImageLoader
+ImageLoader明显要比ImageRequest更加高效，因为它不仅可以帮我们对图片进行缓存，还可以过滤掉重复的链接，避免重复发送请求。	
+
+	ImageLoader的基本使用方法：
+	1. 创建一个RequestQueue对象。
+	2. 创建一个ImageLoader对象。
+	3. 获取一个ImageListener对象。
+	4. 调用ImageLoader的get()方法加载网络上的图片。
+
+```
+	ImageLoader imageLoader = new ImageLoader(requestQueue, imageCache);  //实例化ImageView,需要请求队列和请求的缓存作为参数
+
+	ImageListener listener = imageLoader.getImageListener(imageView, defaultImage, errorImage);  //监听器负责在图片下载结束以后加载到控件上，其中另外两个参数为默认图片和下载错误时将会使用的图片
+
+	imageLoader.get(url, listener) //通过提供URL以及实例化好的监听器，调用imageLoaderd 的 get方法发起请求。也可以使用其重载方法，指定图片的最大大小，超出则压缩。
+```
+
+此外，还有ImageCache，可以扩展它实现自己的缓存类，需要覆写getBitmap和putBitmap方法，在定义类的内部可以通过使用LruCache<String, Bitmap>类作为基础实现缓存。
+
+### 3. 方式3. 使用NetworkImageView,	
+	1. 创建一个RequestQueue对象。
+	2. 创建一个ImageLoader对象。
+	3. 在布局文件中添加一个NetworkImageView控件。
+	4. 在代码中获取该控件的实例。
+	5. 设置要加载的图片地址。
+
+
+```
+	networkImageView.setDefaultImageResId(R.drawable.default_image);  
+	networkImageView.setErrorImageResId(R.drawable.failed_image);  
+	networkImageView.setImageUrl("http://img.my.csdn.net/uploads/201404/13/1397393290_5765.jpeg",  
+                imageLoader);  
+```

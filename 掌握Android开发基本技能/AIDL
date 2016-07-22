@@ -1,0 +1,268 @@
+# AIDL
+
+Android Interface Definition Language (AIDL) 是Android系统中进程间通信的一种方式。
+
+## 1. 基本用法
+
+1. 编写aidl文件，定义接口
+```
+	// IBookManager.aidl
+	package com.example.myapplication;
+
+	import com.example.myapplication.Book;  //导入用到的类，该类必须实现Parcelable接口
+
+	interface IBookManager {
+	   
+	    List<Book> getBookList();
+	    void addBook(in Book book);
+	}
+```
+
+用到的Book类
+
+```
+
+	//Book.java
+	package com.example.myapplication;
+
+	import android.os.Parcel;
+	import android.os.Parcelable;
+
+	/**
+	 * Created by recluseguo on 2016/7/14.
+	 */
+	public class Book implements Parcelable {
+
+
+	    private int bookId;
+	    private String bookName;
+
+	    public Book(int bookId, String bookName){
+	        this.bookId = bookId;
+	        this.bookName = bookName;
+	    }
+
+	    protected Book(Parcel in) {
+	        bookId = in.readInt();
+	        bookName = in.readString();
+	    }
+
+	    public static final Creator<Book> CREATOR = new Creator<Book>() {   //CREATOR作为Book的静态变量可以用于使用Parcel对象构建Book对象，以及Book对象的数组
+	        @Override
+	        public Book createFromParcel(Parcel in) {
+	            return new Book(in);
+	        }
+
+	        @Override
+	        public Book[] newArray(int size) {
+	            return new Book[size];
+	        }
+	    };
+
+	    @Override
+	    public int describeContents() {
+	        return 0;
+	    }
+
+	    @Override
+	    public void writeToParcel(Parcel parcel, int i) {    //序列化方法，
+	        parcel.writeInt(bookId);
+	        parcel.writeString(bookName);
+	    }
+
+	    @Override
+	    public String toString() {
+	        return "book id : " + bookId + " book name : " + bookName + "\n";
+	    }
+	}
+```
+
+另外，所有用到的Parcelabe类都需要定义一个aidl文件，如下Book.aidl
+
+```
+	// Book.aidl.aidl
+	package com.example.myapplication;
+	parcelable Book;
+```
+定义完aidl文件以后即可以进行编译，编译后生成对应的接口文件
+
+```
+	/*
+	 * This file is auto-generated.  DO NOT MODIFY.
+	 * Original file: D:\\Documents\\AndroidStudioProjects\\MyApplication\\MyApplication\\AIDLTest\\src\\main\\aidl\\com\\example\\myapplication\\IBookManager.aidl
+	 */
+	package com.example.myapplication;
+	public interface IBookManager extends android.os.IInterface     //IBinder接口都继承自IInterface
+	{
+	/** Local-side IPC implementation stub class. */
+	public static abstract class Stub extends android.os.Binder implements com.example.myapplication.IBookManager    //定义一个静态内部类，是一个Binder，同时实现了我们自定义的接口，该类是抽象类，内部并没有实现具体的方法逻辑
+	{ 
+	private static final java.lang.String DESCRIPTOR = "com.example.myapplication.IBookManager";   //该接口的唯一描述符
+	/** Construct the stub at attach it to the interface. */
+	public Stub()
+	{
+	this.attachInterface(this, DESCRIPTOR);
+	}
+	/**
+	 * Cast an IBinder object into an com.example.myapplication.IBookManager interface,
+	 * generating a proxy if needed.
+	 */ 
+	public static com.example.myapplication.IBookManager asInterface(android.os.IBinder obj)    
+	{
+	if ((obj==null)) {
+	return null;
+	}
+	android.os.IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
+	if (((iin!=null)&&(iin instanceof com.example.myapplication.IBookManager))) {
+	return ((com.example.myapplication.IBookManager)iin);
+	}
+	return new com.example.myapplication.IBookManager.Stub.Proxy(obj);
+	}
+	@Override public android.os.IBinder asBinder()
+	{
+	return this;
+	}
+	@Override public boolean onTransact(int code, android.os.Parcel data, android.os.Parcel reply, int flags) throws android.os.RemoteException
+	{
+	switch (code)
+	{
+	case INTERFACE_TRANSACTION:
+	{
+	reply.writeString(DESCRIPTOR);
+	return true;
+	}
+	case TRANSACTION_basicTypes:
+	{
+	data.enforceInterface(DESCRIPTOR);
+	int _arg0;
+	_arg0 = data.readInt();
+	long _arg1;
+	_arg1 = data.readLong();
+	boolean _arg2;
+	_arg2 = (0!=data.readInt());
+	float _arg3;
+	_arg3 = data.readFloat();
+	double _arg4;
+	_arg4 = data.readDouble();
+	java.lang.String _arg5;
+	_arg5 = data.readString();
+	this.basicTypes(_arg0, _arg1, _arg2, _arg3, _arg4, _arg5);
+	reply.writeNoException();
+	return true;
+	}
+	case TRANSACTION_getBookList:
+	{
+	data.enforceInterface(DESCRIPTOR);
+	java.util.List<com.example.myapplication.Book> _result = this.getBookList();
+	reply.writeNoException();
+	reply.writeTypedList(_result);
+	return true;
+	}
+	case TRANSACTION_addBook:
+	{
+	data.enforceInterface(DESCRIPTOR);
+	com.example.myapplication.Book _arg0;
+	if ((0!=data.readInt())) {
+	_arg0 = com.example.myapplication.Book.CREATOR.createFromParcel(data);
+	}
+	else {
+	_arg0 = null;
+	}
+	this.addBook(_arg0);
+	reply.writeNoException();
+	return true;
+	}
+	}
+	return super.onTransact(code, data, reply, flags);
+	}
+	private static class Proxy implements com.example.myapplication.IBookManager
+	{
+	private android.os.IBinder mRemote;
+	Proxy(android.os.IBinder remote)
+	{
+	mRemote = remote;
+	}
+	@Override public android.os.IBinder asBinder()
+	{
+	return mRemote;
+	}
+	public java.lang.String getInterfaceDescriptor()
+	{
+	return DESCRIPTOR;
+	}
+	/**
+	     * Demonstrates some basic types that you can use as parameters
+	     * and return values in AIDL.
+	     */
+	@Override public void basicTypes(int anInt, long aLong, boolean aBoolean, float aFloat, double aDouble, java.lang.String aString) throws android.os.RemoteException
+	{
+	android.os.Parcel _data = android.os.Parcel.obtain();
+	android.os.Parcel _reply = android.os.Parcel.obtain();
+	try {
+	_data.writeInterfaceToken(DESCRIPTOR);
+	_data.writeInt(anInt);
+	_data.writeLong(aLong);
+	_data.writeInt(((aBoolean)?(1):(0)));
+	_data.writeFloat(aFloat);
+	_data.writeDouble(aDouble);
+	_data.writeString(aString);
+	mRemote.transact(Stub.TRANSACTION_basicTypes, _data, _reply, 0);
+	_reply.readException();
+	}
+	finally {
+	_reply.recycle();
+	_data.recycle();
+	}
+	}
+	@Override public java.util.List<com.example.myapplication.Book> getBookList() throws android.os.RemoteException
+	{
+	android.os.Parcel _data = android.os.Parcel.obtain();
+	android.os.Parcel _reply = android.os.Parcel.obtain();
+	java.util.List<com.example.myapplication.Book> _result;
+	try {
+	_data.writeInterfaceToken(DESCRIPTOR);
+	mRemote.transact(Stub.TRANSACTION_getBookList, _data, _reply, 0);
+	_reply.readException();
+	_result = _reply.createTypedArrayList(com.example.myapplication.Book.CREATOR);
+	}
+	finally {
+	_reply.recycle();
+	_data.recycle();
+	}
+	return _result;
+	}
+	@Override public void addBook(com.example.myapplication.Book book) throws android.os.RemoteException
+	{
+	android.os.Parcel _data = android.os.Parcel.obtain();
+	android.os.Parcel _reply = android.os.Parcel.obtain();
+	try {
+	_data.writeInterfaceToken(DESCRIPTOR);
+	if ((book!=null)) {
+	_data.writeInt(1);
+	book.writeToParcel(_data, 0);
+	}
+	else {
+	_data.writeInt(0);
+	}
+	mRemote.transact(Stub.TRANSACTION_addBook, _data, _reply, 0);
+	_reply.readException();
+	}
+	finally {
+	_reply.recycle();
+	_data.recycle();
+	}
+	}
+	}
+	static final int TRANSACTION_basicTypes = (android.os.IBinder.FIRST_CALL_TRANSACTION + 0);
+	static final int TRANSACTION_getBookList = (android.os.IBinder.FIRST_CALL_TRANSACTION + 1);
+	static final int TRANSACTION_addBook = (android.os.IBinder.FIRST_CALL_TRANSACTION + 2);
+	}
+	/**
+	     * Demonstrates some basic types that you can use as parameters
+	     * and return values in AIDL.
+	     */
+	public void basicTypes(int anInt, long aLong, boolean aBoolean, float aFloat, double aDouble, java.lang.String aString) throws android.os.RemoteException;
+	public java.util.List<com.example.myapplication.Book> getBookList() throws android.os.RemoteException;
+	public void addBook(com.example.myapplication.Book book) throws android.os.RemoteException;
+	}
+```

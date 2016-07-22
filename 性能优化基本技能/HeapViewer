@@ -1,0 +1,15 @@
+Heap Viewer
+
+- 实时查看App分配的内存大小和空闲内存大小
+- 发现Memory Leaks
+
+Heap Viewer 使用
+直接在Android studio工具栏中启动Android Device Monitor
+
+
+![](http://img.blog.csdn.net/20150924221517594)
+
+内存泄漏
+
+检测
+手动GC下，然后观察data object一栏的total size(也可以观察Heap Size/Allocated内存的情况)，看看内存是不是会回到一个稳定值，多次操作后，只要内存是稳定在某个值，那么说明没有内存溢出的，如果发现内存在每次GC后，都在增长，不管是慢增长还是快速增长，都说明有内存泄漏的可能性。

@@ -1,0 +1,11 @@
+# Android动画
+- View Animation
+- Drawable Animation
+- Property Animation
+
+## 1. View Animation
+视图动画，也叫Tween（补间）动画可以在一个视图容器内执行一系列简单变换（位置、大小、旋转、透明度）。
+
+## 2. Drawable Animation
+
+## 3. Property Animation

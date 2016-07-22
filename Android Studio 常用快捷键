@@ -1,0 +1,58 @@
+常用基本操作：
+Alt(Option)+1	 快速打开或隐藏工程面板
+Esc	光标返回编辑框
+Shift+Esc	光标返回编辑框,关闭无用的窗口
+Alt(Option)+Shift+C	查看文件的变更历史
+Ctrl(Command)+Shift+F10	运行
+Ctrl(Command)+Shift+F9	debug运行
+Ctrl(Command)+Alt(Option)+F12	资源管理器打开文件夹
+
+常用编辑操作：
+Ctrl(Command)+Y	删除行
+Ctrl(Command)+Z	倒退
+Ctrl(Command)+Shift+Z	向前
+Alt(Option)+Enter	自动修正
+Ctrl(Command)+Alt(Option)+L	格式化代码
+Ctrl(Command)+Alt(Option)+I	将选中的代码进行自动缩进编排
+Alt(Option)+Insert	得到一些Intention Action，可以生成构造器、Getter、Setter、将 == 改为 equals() 等
+Ctrl(Command)+Enter	在当前行的上面插入新行，并移动光标到新行（此功能光标在行首时有效）
+Shift+Enter	在当前行的下面插入新行，并移动光标到新行
+Ctrl(Command)+Alt(Option)+T	把选中的代码放在 try{} 、if{} 、 else{} 里
+F2/Shift+F2	跳转到下/上一个错误语句处
+Ctrl(Command)+Shift+Back	跳转到上次编辑的地方
+Ctrl(Command)+Shift+Up/Down	语句向上/下移动
+Ctrl(Command)+Alt(Option)+Left/Right	返回上次编辑的位置
+
+
+常用文件操作：
+Ctrl(Command)+H	显示类继承结构图
+Ctrl(Command)+Q	显示注释文档
+Ctrl(Command)+P	方法参数提示
+Alt(Option)+Left/Right	切换代码视图
+Ctrl(Command)+G	定位行
+
+常用查找操作：
+Ctrl(Command)+F	在当前窗口查找文本
+F3	向下查找关键字出现位置
+Shift+F3	向上一个关键字出现位置
+Ctrl(Command)+R	在当前窗口替换文本
+Ctrl(Command)+N	查找类
+Ctrl(Command)+Shift+N	查找文件
+Ctrl(Command)+Shift+Alt(Option)+N	查找项目中的方法或变量
+Alt(Option)+F7	查询当前元素在工程中的引用
+Ctrl(Command)+F7	查询当前元素在当前文件中的引用，然后按 F3 可以选择
+Ctrl(Command)+Alt(Option)+F7	查找某个方法的所有调用地方
+
+常用重构操作：
+Alt(Option)+Delete	安全删除
+Ctrl(Command)+U	转到父类
+Ctrl(Command)+O	重写父类的方法
+Ctrl(Command)+I	实现方法
+
+常用调试操作：
+F8	跳到下一步
+Shift+F8	跳出函数、跳到下一个断点
+Alt(Option)+F9	运行至光标处
+Ctrl(Command)+Alt(Option)+F9	强制运行至光标处
+Ctrl(Command)+F2	停止运行
+Alt(Option)+F8	计算变量值

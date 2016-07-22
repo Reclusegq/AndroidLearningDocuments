@@ -1,0 +1,33 @@
+# RecyclerView 简介
+
+## 1. 基础知识
+RecyclerView是谷歌V7包下新增的控件,用来替代ListView的使用,在RecyclerView标准化了ViewHolder类似于ListView中convertView用来做视图缓.
+> A flexible view for providing a limited window into a large data set.
+>RecyclerView is a more advanced and flexible version of ListView. This widget is a container for large sets of views that can be recycled and scrolled very efficiently. Use the RecyclerView widget when you have lists with elements that change dynamically.
+
+RecyclerView实现了高度解耦，它负责视图缓存功能，而将其他功能交由它的三个内部类完成。LayoutManager负责视图（子View）布局，Adapter负责为提供数据，ItemDecoration负责为子View增加修饰，ItemAnimator负责子View在增加，移动和删除时的动画。
+
+### 1. RecyclerView.LayoutManager 
+>    A LayoutManager is responsible for measuring and positioning item views  within a RecyclerView as well as determining the policy for when to recycle item views that are no longer visible to the user. By changing the LayoutManager a RecyclerView can be used to implement a standard vertically scrolling list, a uniform grid, staggered grids, horizontally scrolling collections and more. Several stock layout managers are provided for general use.
+LayoutManager负责RecyclerView中子View视图布局，该内部类为一个抽象类，Android系统提供了三个具体实现，分别是LinerLayoutManger，GridLayoutManger和StaggeredGridLayoutManager分别实现线性的，网格的以及瀑布流式的布局管理。因此我可以根据需要直接实例化或者扩展上述三个Manager的一种，也可以直接扩展抽象类LayoutManager实现自己的布局管理器，并提供给RecyclerView的setLayoutManager()方法，从而完成子视图的布局需要。
+
+### 2. RecyclerView.Adapter<VH extends ViewHolder>
+Adapter也是一个抽象类，负责为RecyclerView提供数据，其实它是应用中数据层与视图层的一个中间桥梁。该类需要实现的主要包括以下两个抽象方法。
+```
+
+ //Called when RecyclerView needs a new ViewHolder of the given type to represent an item.
+public abstract VH onCreateViewHolder(ViewGroup parent, int viewType);            
+
+//Called by RecyclerView to display the data at the specified position. This method should update the contents of the ViewHolder#itemView to reflect the item at the give position.
+public abstract void c(VH holder, int position);
+
+```
+1. onCreateViewHolder方法中应该由新的View生成新的ViewHolder，View可以由布局文件生成，也可以有代码生成，其中VH为ViewHolder的子类，可以自己扩展ViewHolder实现，在其内部定制该Holder所持有的控件；ViewHolder用户展示adapter中的数据，由于视图是重复使用的，因此需要缓存View，从而避免findViewById带来的性能消耗；
+2. onBindViewHolder方法中将adapter中的数据展示到某个位置的子View中，该方法中应实现每个Item中的各个部分视图与相应数据连接的逻辑。
+
+### 3. RecyclerView.ItemDecoration
+>   An ItemDecoration allows the application to add a special drawing and layout offset to specific item views from the adapter's data set. This can be useful for drawing dividers between items, highlights, visual grouping boundaries and more.
+ItemDecoration 负责为每个Item提供修饰，如分割线等，它们的绘制会在add之后，而在onDraw方法内的逻辑会在每个Item的绘制之前绘制，而在onDrawOver方法的逻辑会在每个Item的绘制之后绘制。
+另外，getItemOffsets方法中，可以通过Rect的set方法为Item设定偏移位置，如果在增加分割线等修饰后不需要偏移，全部设置为0，如果某些Item位置需要移动可以设定便宜
+
+### 4. RecyclerView.ItemAnamition

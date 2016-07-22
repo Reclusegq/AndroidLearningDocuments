@@ -1,0 +1,24 @@
+# ViewPager简介
+## 1.基础知识
+&emsp; ViewPager 继承自ViewGroup，是一个视图容器或是说布局管理器，可以通过左右翻转浏览一系列数据视图，视图的数据来源由PagerAdapter提供。ViewPager经常和Fragment一起使用，这样就可以很方便的提供和管理每一个界面的生命周期，有标准的适配器的实现方式用于使用Fragment的ViewPager,这样的适配器包含了最常见的案例，它就是FragmentPagerAdapter和FragmentStatePagerAdapter，这两个适配器都是简单的代码来演示如何构建一个完整的用户界面。
+
+## 2. PagerAdapter的用法
+&emsp; PagerAdapter的主要功能是为ViewPager提供数据，在其内部有四个方法必须要实现，分别如下：
+
+```
+	public abstract int getCount();   //	Return the number of views available.
+
+	public Object instantiateItem(ViewGroup container, int position)  //Create the page for the given position and add the page to container
+
+	public void destroyItem(ViewGroup container, int position, Object object) //Remove a page for the given position.
+
+	public abstract boolean isViewFromObject(View view, Object object);  //Determines whether a page View is associated with a specific key objectas returned bylink instantiateItem(ViewGroup, int).
+
+```
+
+&emsp; ViewPager将每一个页面与一个Key对象进行关联，而不是直接操作这个视图，这个Key对象用来跟踪和唯一的标识一个给定的视图，独立于适配器中的位置，调用PagerAdapter的startUpdate(ViewGroup)方法表明ViewPager的内容将要发生变化，接着一次或多次的调用instantiateItem(ViewGroup,int)和destroyItem(ViewGroup,int,Object)方法，即在containner中添加或删除要显示的View，最后通过调用finishUpdate(ViewGroup)来标识更新的完成，finishUpdate方法返回一个视图，方法isViewFromObject(View,Object)用于判断instantiateItem方法中返回的Key与视图关联是否正确，正确则显示该视图，不正确则不显示。
+
+&emsp; 最简单的方法就是使用View本身作为Key，即instantiateItem方法中返回要显示的View，并在isViewFromObject直接通过view==object判断关联是否正确。
+
+## 3. ViewPager与Fragment一起使用
+&emsp; ViewPager通常与Fragment一起使用，每一个Pager内不再是展示一个View，而是一个独立的Fragment。适配器包括两个，即FragmentPagerAdapter和FragmentStatePagerAdapter。

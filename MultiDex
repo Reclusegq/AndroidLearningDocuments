@@ -1,0 +1,38 @@
+1. 原因
+在应用的安装过程中，系统会运行一个名为dexopt的程序为该应用在当前机型中运行做准备。dexopt使用LinearAlloc来存储应用的方法信息。Android 2.2和2.3的缓冲区只有5MB，Android 4.x提高到了8MB或16MB。当方法数量过多导致超出缓冲区大小时，会造成dexopt崩溃。
+一个DEX文件中method个数采用使用原生类型short来索引文件中的方法，也就是4个字节共计最多表达65536个method，field/class的个数也均有此限制。Android打包的DEX过程中， 单个DEX文件可被引用的方法总数（自己开发的代码以及所引用的Android框架、类库的代码）被限制为65536。
+
+2. 常见解决方法
+(1)加大Proguard的力度来减小DEX的大小和方法数; (2)Google提供的MultiDex方案; (3) Facebook推出的为Android应用开发的Dalvik补丁(插件化方案)
+
+3. 使用MultiDex
+	(1) 修改Gradle
+	android {
+	    compileSdkVersion 21
+	    buildToolsVersion "21.1.0"
+
+	    defaultConfig {
+	        ...
+	        minSdkVersion 14
+	        targetSdkVersion 21
+	        ...
+
+	        // Enabling multidex support.
+	        multiDexEnabled true
+	    }
+	    ...
+	}
+
+	dependencies {
+	  compile 'com.android.support:multidex:1.0.0'
+	}
+
+	(2) 修改Application的name属性
+		android:name="android.support.multidex.MultiDexApplication"
+
+	(3) 覆写attachBaseContext() 方法
+	    @Override
+	    protected void attachBaseContext(Context base) {
+	        super.attachBaseContext(base);
+	        MultiDex.install(this);
+	    }·

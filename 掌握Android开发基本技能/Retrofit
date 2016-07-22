@@ -1,0 +1,6 @@
+# Retrofit
+Retrofit是一套RESTful架构的Android(Java)客户端实现，基于注解，提供JSON to POJO(Plain Ordinary Java Object,简单Java对象)，POJO to JSON，网络请求(POST，GET,PUT，DELETE等)封装。
+
+
+Retrofit 实例依然是使用Builder构建，可以通过baseUrl()添加URL，addConverterFactory()添加解析类的工厂对象，client()方法添加HTTP client现在默认为OkHttp的客户端。
+Retrofit可以通过定义接口定制请求，通过注解设定请求方法以及请求的各类参数，接口中的方法返回Call<T>对象，call实例可以通过execute()或者enqueue(Callback)方法执行同步或者异步请求，并获取Response对象。获取响应内容。Response<T>带有参数，因此可以通过设定的converter实现响应内容解析为对应Java对象的过程。	
